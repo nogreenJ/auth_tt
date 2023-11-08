@@ -1,4 +1,4 @@
-import 'package:firebase_auth_trab/screens/chat_screen.dart';
+import 'package:auth_tt/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,8 +9,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  final CollectionReference _contatos =
-  FirebaseFirestore.instance.collection('contatos');
+  /*final CollectionReference _contatos =
+  FirebaseFirestore.instance.collection('contatos');*/
 
   // _contatos.add({"nome" : "Maria", "fone" : "555555"});
   // print("incluindo dados de contato");
@@ -19,11 +19,11 @@ void main() async {
   //_contatos.doc("YdQbACTkWKXQw8vzs3MC").update({"fone" :"88888888"});
   // _contatos.doc("ECbzi4R508MWVre2E47A").delete();
 
-  QuerySnapshot snapshot = await _contatos.get();
+  /*QuerySnapshot snapshot = await _contatos.get();
 
   snapshot.docs.forEach((element) {
     print(element.data().toString());
-  });
+  });*/
   runApp(const MyApp());
 }
 

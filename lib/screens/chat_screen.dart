@@ -7,7 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'keys.dart' as keys;
 
 class ChatScreen extends StatefulWidget {
@@ -81,6 +80,9 @@ class ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage({String? text, XFile? imgFile}) async {
     User? user = await _getUser(context: context);
+    if (user == null) {
+      return;
+    }
 
     Map<String, dynamic> data = {
       'url': "",
@@ -129,24 +131,25 @@ class ChatScreenState extends State<ChatScreen> {
       final twitterLogin = TwitterLogin(
         apiKey: keys.apiKey,
         apiSecretKey: keys.apiSecretKey,
-        redirectURI: "twitter-firebase-auth://",
+        redirectURI: "twittersdk://",
       );
       final authResult = await twitterLogin.login();
 
-      switch (authResult.status) {
-        case TwitterLoginStatus.loggedIn:
-          final AuthCredential twitterAuthCredential =
-              TwitterAuthProvider.credential(
-                  accessToken: authResult.authToken!,
-                  secret: authResult.authTokenSecret!);
+      if (authResult.status == TwitterLoginStatus.loggedIn) {
+        final AuthCredential twitterAuthCredential =
+            TwitterAuthProvider.credential(
+                accessToken: authResult.authToken!,
+                secret: authResult.authTokenSecret!);
 
-          final userCredential =
-              await auth.signInWithCredential(twitterAuthCredential);
-          return userCredential.user;
-        default:
-          return null;
+        final userCredential =
+            await auth.signInWithCredential(twitterAuthCredential);
+        _currentUser = userCredential.user;
       }
     }
+    if (_currentUser == null) {
+      return null;
+    }
+    _currentUser = user;
     print("user logado: " + user!.displayName.toString());
     return user;
   }
